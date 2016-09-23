@@ -1,0 +1,9 @@
+../static/image/image1.jpg  同款1 描述1
+../static/image/image2.jpg  同款2 描述2
+../static/image/image3.jpg  同款3 描述3
+../static/image/image4.jpg  同款4 描述4
+../static/image/image5.jpg  同款5 描述5
+../static/image/image6.jpg  同款6 描述6
+../static/image/image7.png  同款7 描述7
+../static/image/image8.jpg  同款8 描述8
+../static/image/image9.jpg  同款9 描述9

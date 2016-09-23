@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block header %}
+<style type="text/css">
+#search_box {
+  margin-top: 200px;
+}
+.search-icon{
+  padding: 5px 5px;
+}
+#search-button{
+  width: 200px;
+  height: 50px;
+  margin-top: 60px;
+  /*padding: 10px 80px;*/
+}
+#upload-button{
+  width: 200px;
+  height: 50px;
+  margin-top: 60px;
+  /*padding: 10px 80px;*/
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- <div class="row" id="search_box">
+    <div class="col-xs-6 col-xs-offset-3">
+      <div class="form-group form-group-lg" id="text-search">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="请输入搜索信息" >
+          <div class="input-group-addon"><span class="glyphicon glyphicon-camera" id="camera-icon" style="display:block;width:20px;height:20px;"></span></div>
+        </div>
+        <a href="#" type="button" class="btn btn-success btn-lg center-block" id="search-button" >搜&nbsp;&nbsp;&nbsp;&nbsp;索</a>
+      </div>
+      <div class="form-group form-group-lg" id="image-upload" style="display:none">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="请输入图片网址" >
+          <div class="input-group-addon"><span class="glyphicon glyphicon-remove" id="search-close" style="display:block;width:20px;height:20px;"></span></div>
+        </div>
+        <label class="btn btn-success btn-lg center-block" id="upload-button">本地上传图片<input type="file" name="search_image" id="upload" style="display: none;"></label>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="container-fluid">
+    <div class="row" id="search_box">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="input-group input-group-lg">
+          <input type="text" class="form-control" id="search_text" placeholder="请输入搜索信息" >
+          <label class="input-group-addon"><span class="glyphicon glyphicon-camera" id="camera-icon"><input type="file" name="search_image" id="image_update" style="display: none;"></span></label>
+          <div class="input-group-btn">
+            <a href="#" type="button" id="search_button" class="btn btn-success btn-lg">搜索</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#camera-icon").click(function(){
+    $("#image-upload").show();
+    $("#text-search").hide();
+  });
+  $("#search-close").click(function(){
+    $("#image-upload").hide();
+    $("#text-search").show();
+  });
+});
+$(document).on("change", "#image_update", function(){
+  var file_data = $("#image_update").prop("files")[0];
+  var form_data = new FormData();
+  form_data.append("imagedata",file_data);
+  $.ajax({
+    url: '/image_upload',
+    type: 'POST',
+    data: form_data,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function(data, textStatus) {
+      var response = jQuery.parseJSON(data);
+      window.location.href = response.link;
+    }
+    // error: function(data, textStatus) {
+    //   var response = jQuery.parseJSON(data);
+    //   window.location.href = response.link;
+    // }
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block header %}
+<style type="text/css">
+#image_display {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+.catagory{
+  margin: 20px auto;
+  display: block;
+}
+.image-display{
+  margin: auto;
+}
+.image-list{
+  display: block;
+  margin: 50px auto;
+}
+.catagory-display{
+  margin: 20px;
+  padding: 40px 40px;
+}
+/*.center-block {
+  float: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}*/
+.search-icon{
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row" id="image_display">
+      <div class="catagory">
+        <div class="col-md-10 col-md-offset-1 text-centers">
+          <!-- {{ filename == filelist[0] }} -->
+          <img src="/static/image/{{filelist[0]}}.jpg" class="thumbimage" id="image_sample" alt="{{filelist[0]}}" style="width:auto;height:400px;" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <label style="position:text-center;">请在图中框出字幕位置并在下方输入字幕内容</label>
+        <textarea class="form-control" id="input_box" name="input_box" rows="2" placeholder="请输入字幕内容" style="display:none;"></textarea>
+        <input type="hidden" name="x1" value="" />
+        <input type="hidden" name="y1" value="" />
+        <input type="hidden" name="x2" value="" />
+        <input type="hidden" name="y2" value="" />
+        <input type="hidden" name="w" value="" />
+        <input type="hidden" name="h" value="" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="text-center" id="submit_button" style="margin-top:20px; margin-bottom:20px; display:none;">
+        <a type="button" class="btn btn-success btn-lg" id="rect_update">提交</a>
+        <a type="button" class="btn btn-default btn-lg" id="rect_cancel">取消</a>
+      </div>
+    </div>
+  </div>
+
+<hr />
+
+<!-- <div class="container-fluid">
+  <div class="row">
+    <ul class="pager">
+      <li><a href="#">上一页</a></li>
+      <li><a href="#">下一页</a></li>
+    </ul>
+  </div>
+</div> -->
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // $('img.thumbimage').imgZoom();
+  $('img#image_sample').imgAreaSelect({
+        handles: true,
+        onSelectEnd: function(img, selection){
+            $("#submit_button").show();
+            $("#input_box").show();
+            if (!selection.width || !selection.height){
+                return;
+            }
+            $('input[name="x1"]').val(selection.x1);
+            $('input[name="y1"]').val(selection.y1);
+            $('input[name="x2"]').val(selection.x2);
+            $('input[name="y2"]').val(selection.y2);
+            $('input[name="w"]').val(selection.width);
+            $('input[name="h"]').val(selection.height);
+        }
+    });
+    $('#rect_cancel').click(function(){
+      $('#submit_button').hide();
+      location.reload();
+    });
+    $('#rect_update').click(function(){
+      json_data = {}
+      infodata = {}
+      rect = {}
+      content = {}
+      rect.x1 = $('input[name="x1"]').val();
+      rect.y1 = $('input[name="y1"]').val();
+      rect.w = $('input[name="w"]').val();
+      rect.h = $('input[name="h"]').val();
+      content.index = $('img#image_sample').attr('alt');
+      content.filename = $('img#image_sample').attr('src');
+      content.text = $('textarea[name="input_box"]').val();
+      infodata['rect'] = JSON.stringify(rect);
+      infodata['content'] = JSON.stringify(content);
+      json_data['info'] = JSON.stringify(infodata);
+      $.ajax({
+        url: "/extract_search",
+        type: 'POST',
+        dataType: 'application/json',
+        data: json_data
+      });
+      $('#submit_button').hide();
+      location.reload();
+    });
+});
+</script>
+
+{% endblock %}
